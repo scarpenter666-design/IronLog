@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="80" fill="#0a0a0a"/>
+  <!-- Red glow -->
+  <radialGradient id="glow" cx="75%" cy="25%" r="50%">
+    <stop offset="0%" stop-color="#e8192c" stop-opacity="0.35"/>
+    <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="512" height="512" rx="80" fill="url(#glow)"/>
+  <!-- IRON text -->
+  <text x="256" y="280" font-family="Arial Black, sans-serif" font-weight="900" font-size="148" fill="#e8192c" text-anchor="middle" letter-spacing="4">IRON</text>
+  <!-- LOG text -->
+  <text x="256" y="400" font-family="Arial Black, sans-serif" font-weight="900" font-size="148" fill="#ffffff" text-anchor="middle" letter-spacing="4">LOG</text>
+  <!-- Top accent line -->
+  <rect x="80" y="108" width="352" height="6" rx="3" fill="#e8192c" opacity="0.6"/>
+</svg>
