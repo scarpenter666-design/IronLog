@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#e8192c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="IRONLOG">
+<meta name="apple-mobile-web-app-title" content="IronLog">
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <title>IRONLOG</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -181,11 +182,18 @@ label{font-size:11px;color:var(--text2);display:block;margin-bottom:5px;text-tra
 </head>
 <body>
 <div id="app">
+  <!-- Update Banner -->
+  <div id="updateBanner" style="display:none;background:#e8192c;color:#fff;text-align:center;padding:10px 20px;font-size:0.88rem;font-weight:600;position:sticky;top:0;z-index:999;align-items:center;justify-content:center;gap:12px;">
+    <span>&#x1F504; Eine neue Version ist verfuegbar!</span>
+    <button onclick="applyUpdate()" style="background:#fff;color:#e8192c;border:none;border-radius:6px;padding:5px 14px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;">Jetzt aktualisieren</button>
+  </div>
+
   <div id="header">
     <div class="logo">IRONLOG</div>
     <div class="header-right">
       <div id="pageDots"></div>
       <div class="date-small" id="headerDate"></div>
+      <button id="installBtn" onclick="installPWA()" style="display:none;background:none;border:1px solid rgba(232,25,44,.4);border-radius:6px;color:#e8192c;font-size:11px;padding:4px 8px;cursor:pointer;font-family:inherit;">&#x1F4F2; Install</button>
     </div>
   </div>
 
@@ -465,7 +473,55 @@ label{font-size:11px;color:var(--text2);display:block;margin-bottom:5px;text-tra
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js">
+// ── SERVICE WORKER & AUTO-UPDATE ──
+let swRegistration = null;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    swRegistration = reg;
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          document.getElementById('updateBanner').style.display = 'flex';
+        }
+      });
+    });
+  }).catch(() => {});
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}
+
+function applyUpdate() {
+  if (swRegistration && swRegistration.waiting) {
+    swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+  } else {
+    window.location.reload();
+  }
+}
+
+// ── PWA INSTALL PROMPT ──
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('installBtn');
+  if (btn) btn.style.display = 'flex';
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const btn = document.getElementById('installBtn');
+  if (btn) btn.style.display = 'none';
+});
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  }
+}
+</script>
 <script>
 // ═══════════════════════════════════════════
 // CONSTANTS

@@ -1,18 +1,15 @@
 {
-  "name": "IRONLOG",
-  "short_name": "IRONLOG",
+  "name": "IronLog",
+  "short_name": "IronLog",
   "description": "Dein persönlicher Gym-Tracker",
-  "start_url": "/IronLog/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#e8192c",
-  "orientation": "portrait",
+  "lang": "de",
   "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
   ]
 }
