@@ -1,4 +1,4 @@
-const VERSION = 'ironlog-v1';
+const VERSION = 'ironlog-v2';
 const ASSETS = ['./index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', e => {
@@ -9,7 +9,7 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k)))
+      Promise.all(keys.filter(k => k.startsWith('ironlog-') && k !== VERSION).map(k => caches.delete(k)))
     ).then(() => clients.claim())
   );
 });

@@ -473,9 +473,11 @@ label{font-size:11px;color:var(--text2);display:block;margin-bottom:5px;text-tra
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
 // ── SERVICE WORKER & AUTO-UPDATE ──
 let swRegistration = null;
+let updateRequested = false;
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').then(reg => {
     swRegistration = reg;
@@ -490,12 +492,13 @@ if ('serviceWorker' in navigator) {
   }).catch(() => {});
 
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    window.location.reload();
+    if (updateRequested) window.location.reload();
   });
 }
 
 function applyUpdate() {
   if (swRegistration && swRegistration.waiting) {
+    updateRequested = true;
     swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
   } else {
     window.location.reload();
